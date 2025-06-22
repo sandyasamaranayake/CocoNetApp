@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CocoNetApp</string>
+    <string name="product_image">Product Image</string>
+    <string name="no_orders_found">No orders found</string>
+    <string name="order_list">List of orders</string>
+    <string name="marketplace_title">Marketplace</string>
+    <string name="my_orders">My Orders</string>
+    <string name="marketplace_list_desc">Marketplace product list</string>
+    <string name="my_api_key">AIzaSyAYVVhHi3lkoOk0rZk80UQK64223FM4qp4</string>
+
+</resources>
