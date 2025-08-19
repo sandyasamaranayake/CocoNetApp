@@ -24,7 +24,7 @@ public class MyProductsActivity extends AppCompatActivity {
         recyclerViewProducts = findViewById(R.id.recyclerViewProducts);
         dbHelper = new DBHelper(this);
 
-        // Get farmer email from intent
+
         farmerEmail = getIntent().getStringExtra("userEmail");
         if (farmerEmail == null) farmerEmail = "";
 

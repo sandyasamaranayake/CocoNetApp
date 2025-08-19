@@ -65,6 +65,15 @@
             android:textStyle="bold"
             android:textSize="14sp"
             android:textColor="#444444"/>
+
+        <TextView
+            android:id="@+id/txtCoordinates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Coordinates:"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"/>
+
     </LinearLayout>
 
     <Button

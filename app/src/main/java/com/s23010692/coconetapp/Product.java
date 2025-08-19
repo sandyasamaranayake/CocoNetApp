@@ -7,22 +7,25 @@ public class Product {
     private double price;
     private String imageUri;
     private String ownerEmail;
-    private String location;
+    private String locationText;   // Human-readable location
     private double latitude;
     private double longitude;
 
-    public Product(int id, String name, int quantity, double price, String imageUri, String ownerEmail, String location, double latitude, double longitude) {
+    // Constructor
+    public Product(int id, String name, int quantity, double price, String imageUri,
+                   String ownerEmail, String locationText, double latitude, double longitude) {
         this.id = id;
         this.name = name;
-        this.location = location;
         this.quantity = quantity;
         this.price = price;
         this.imageUri = imageUri;
         this.ownerEmail = ownerEmail;
+        this.locationText = locationText;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -47,8 +50,8 @@ public class Product {
         return ownerEmail;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationText() {
+        return locationText;
     }
 
     public double getLatitude() {
@@ -59,6 +62,7 @@ public class Product {
         return longitude;
     }
 
+    // Setters
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
@@ -69,5 +73,10 @@ public class Product {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    // Returns the human-readable location
+    public String getLocation() {
+        return locationText;
     }
 }

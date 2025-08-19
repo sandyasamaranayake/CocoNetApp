@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
             if (username.equals("buyer") && password.equals("1234")) {
                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                 intent.putExtra("userRole", "buyer");
-                intent.putExtra("userEmail", "buyer@coconet.com"); // default buyer email
+                intent.putExtra("userEmail", "buyer@coconet.com");
                 startActivity(intent);
                 finish();
                 return;
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                 intent.putExtra("userRole", role);
-                intent.putExtra("userEmail", username); // assuming username is email
+                intent.putExtra("userEmail", username);
                 startActivity(intent);
                 finish();
             } else {

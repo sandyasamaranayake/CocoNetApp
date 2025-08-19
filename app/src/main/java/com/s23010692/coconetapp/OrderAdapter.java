@@ -48,6 +48,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.txtOwner.setText("Farmer: " + order.getOwnerEmail());
         holder.txtLocation.setText("Location: " + (order.getLocation() != null ? order.getLocation() : "N/A"));
 
+        // Display latitude and longitude if available
+        holder.txtCoordinates.setText(String.format("Coordinates: %.6f, %.6f", order.getLatitude(), order.getLongitude()));
+
         String imageUri = order.getImageUri();
         Log.d("OrderAdapter", "Order imageUri: " + imageUri);
 
@@ -83,7 +86,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView txtOrderId, txtQuantity, txtPrice, txtOwner, txtLocation;
+        TextView txtOrderId, txtQuantity, txtPrice, txtOwner, txtLocation, txtCoordinates;
         ImageView imgProduct;
         Button btnCancel;
 
@@ -94,6 +97,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             txtPrice = itemView.findViewById(R.id.txtPrice);
             txtOwner = itemView.findViewById(R.id.txtOwner);
             txtLocation = itemView.findViewById(R.id.txtLocation);
+            txtCoordinates = itemView.findViewById(R.id.txtCoordinates); // Add this TextView in XML
             imgProduct = itemView.findViewById(R.id.imgProduct);
             btnCancel = itemView.findViewById(R.id.btnCancel);
         }
