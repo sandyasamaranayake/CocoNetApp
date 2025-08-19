@@ -92,8 +92,9 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         btnFeedback.setOnClickListener(v -> {
-            // You can later link to FeedbackActivity
-            // startActivity(new Intent(this, FeedbackActivity.class));
+            Intent intent = new Intent(this, FeedbackActivity.class);
+            intent.putExtra("userEmail", userEmail);
+            startActivity(intent);
         });
 
         btnMap.setOnClickListener(v -> {

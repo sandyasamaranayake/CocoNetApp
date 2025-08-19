@@ -28,7 +28,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             if (email.isEmpty()) {
                 Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show();
             } else {
-                // You can add real logic to send an email/OTP here
+
                 Toast.makeText(this, "Password reset link sent to " + email, Toast.LENGTH_SHORT).show();
             }
         });

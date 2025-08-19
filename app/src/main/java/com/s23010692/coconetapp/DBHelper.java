@@ -1,10 +1,10 @@
 package com.s23010692.coconetapp;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "CocoNetApp.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // Updated version
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,8 +37,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "location TEXT," +
                 "price REAL," +
                 "imageUri TEXT," +
-                "latitude REAL, " +
-                "longitude REAL, " +
+                "latitude REAL," +
+                "longitude REAL," +
                 "ownerEmail TEXT)");
 
         db.execSQL("CREATE TABLE orders (" +
@@ -47,7 +47,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 "quantity INTEGER," +
                 "price REAL," +
                 "ownerEmail TEXT," +
-                "buyerEmail TEXT)");
+                "buyerEmail TEXT," +
+                "latitude REAL," + // Added latitude
+                "longitude REAL" + // Added longitude
+                ")");
     }
 
     @Override
@@ -78,7 +81,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.query("users", null, "email=? AND password=?", new String[]{email, password}, null, null, null);
     }
 
-
     public boolean insertProduct(String name, int quantity, String location, double price, String imageUri, String ownerEmail, double latitude, double longitude) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -93,9 +95,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("products", null, values) != -1;
     }
 
-
-    public List<Product> getAllProductsWithLocation() {
-        List<Product> products = new ArrayList<>();
+    public List<com.s23010692.coconetapp.Product> getAllProductsWithLocation() {
+        List<com.s23010692.coconetapp.Product> products = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("products", null, null, null, null, null, null);
         while (cursor.moveToNext()) {
@@ -109,9 +110,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return products;
     }
 
-
-    public List<Product> getAllProducts() {
-        List<Product> products = new ArrayList<>();
+    public List<com.s23010692.coconetapp.Product> getAllProducts() {
+        List<com.s23010692.coconetapp.Product> products = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("products", null, null, null, null, null, null);
         while (cursor.moveToNext()) {
@@ -121,8 +121,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return products;
     }
 
-    public List<Product> getProductsByFarmer(String farmerEmail) {
-        List<Product> productList = new ArrayList<>();
+    public List<com.s23010692.coconetapp.Product> getProductsByFarmer(String farmerEmail) {
+        List<com.s23010692.coconetapp.Product> productList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("products", null, "ownerEmail=?", new String[]{farmerEmail}, null, null, null);
         while (cursor.moveToNext()) {
@@ -132,7 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return productList;
     }
 
-    private Product extractProduct(Cursor cursor) {
+    private com.s23010692.coconetapp.Product extractProduct(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
         String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
         int qty = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
@@ -142,7 +142,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String ownerEmail = cursor.getString(cursor.getColumnIndexOrThrow("ownerEmail"));
         double latitude = cursor.getDouble(cursor.getColumnIndexOrThrow("latitude"));
         double longitude = cursor.getDouble(cursor.getColumnIndexOrThrow("longitude"));
-        return new Product(id, name, qty, price, imageUri, ownerEmail, location, latitude, longitude);
+        return new com.s23010692.coconetapp.Product(id, name, qty, price, imageUri, ownerEmail, location, latitude, longitude);
     }
 
     public void deleteProduct(int productId) {
@@ -171,9 +171,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return rows > 0;
     }
 
-
     public boolean placeOrder(int productId, double price, int quantity, String ownerEmail, String buyerEmail) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        // Get product location
+        Cursor cursor = db.query("products", new String[]{"latitude", "longitude"}, "id=?", new String[]{String.valueOf(productId)}, null, null, null);
+        double latitude = 0.0;
+        double longitude = 0.0;
+        if (cursor.moveToFirst()) {
+            latitude = cursor.getDouble(cursor.getColumnIndexOrThrow("latitude"));
+            longitude = cursor.getDouble(cursor.getColumnIndexOrThrow("longitude"));
+        }
+        cursor.close();
 
         ContentValues values = new ContentValues();
         values.put("product_id", productId);
@@ -181,15 +190,17 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("quantity", quantity);
         values.put("ownerEmail", ownerEmail);
         values.put("buyerEmail", buyerEmail);
+        values.put("latitude", latitude);
+        values.put("longitude", longitude);
 
         long result = db.insert("orders", null, values);
         return result != -1;
     }
 
-    public List<Order> getOrdersByBuyer(String buyerEmail) {
-        List<Order> orderList = new ArrayList<>();
+    public List<com.s23010692.coconetapp.Order> getOrdersByBuyer(String buyerEmail) {
+        List<com.s23010692.coconetapp.Order> orderList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT o.id, o.quantity, o.price, o.ownerEmail, o.buyerEmail, p.imageUri, p.location " +
+        String query = "SELECT o.id, o.quantity, o.price, o.ownerEmail, o.buyerEmail, o.latitude, o.longitude, p.imageUri, p.location " +
                 "FROM orders o " +
                 "JOIN products p ON o.product_id = p.id " +
                 "WHERE o.buyerEmail = ?";
@@ -202,7 +213,10 @@ public class DBHelper extends SQLiteOpenHelper {
             String imageUri = cursor.getString(cursor.getColumnIndexOrThrow("imageUri"));
             String location = cursor.getString(cursor.getColumnIndexOrThrow("location"));
             String buyer = cursor.getString(cursor.getColumnIndexOrThrow("buyerEmail"));
-            orderList.add(new Order(id, qty, price, imageUri, ownerEmail, buyer, location));
+            double latitude = cursor.getDouble(cursor.getColumnIndexOrThrow("latitude"));
+            double longitude = cursor.getDouble(cursor.getColumnIndexOrThrow("longitude"));
+
+            orderList.add(new com.s23010692.coconetapp.Order(id, qty, price, imageUri, ownerEmail, buyer, location, latitude, longitude));
         }
         cursor.close();
         return orderList;

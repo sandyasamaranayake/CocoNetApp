@@ -15,11 +15,10 @@ public class Order implements Serializable {
     private String ownerEmail;
     private String buyerEmail;
     private String location;
+    private double latitude;
+    private double longitude;
 
-    /**
-     * Constructs an Order with all fields.
-     */
-    public Order(int id, int quantity, double price, String imageUri, String ownerEmail, String buyerEmail, String location) {
+    public Order(int id, int quantity, double price, String imageUri, String ownerEmail, String buyerEmail, String location, double latitude, double longitude) {
         this.id = id;
         this.quantity = quantity;
         this.price = price;
@@ -27,6 +26,8 @@ public class Order implements Serializable {
         this.ownerEmail = ownerEmail;
         this.buyerEmail = buyerEmail;
         this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public int getId() { return id; }
@@ -50,6 +51,12 @@ public class Order implements Serializable {
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
+    public double getLatitude() { return latitude; }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+
+    public double getLongitude() { return longitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -60,6 +67,8 @@ public class Order implements Serializable {
                 ", ownerEmail='" + ownerEmail + '\'' +
                 ", buyerEmail='" + buyerEmail + '\'' +
                 ", location='" + location + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 }

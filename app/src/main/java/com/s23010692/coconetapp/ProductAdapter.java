@@ -41,7 +41,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         holder.txtQuantity.setText("Quantity: " + product.getQuantity());
         holder.txtPrice.setText("Price: Rs " + product.getPrice());
-        holder.txtLocation.setText("Location: " + product.getLocation());
+        holder.txtLocation.setText("Location: " + product.getLocationText());   // ✅ Corrected here
 
         String imageUri = product.getImageUri();
         if (imageUri != null && !imageUri.isEmpty()) {
@@ -77,7 +77,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             txtQuantity = itemView.findViewById(R.id.txtQuantity);
-            txtLocation = itemView.findViewById(R.id.txtLocation); // Fixed id
+            txtLocation = itemView.findViewById(R.id.txtLocation);
             txtPrice = itemView.findViewById(R.id.txtPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             btnDelete = itemView.findViewById(R.id.btnDelete);
